@@ -180,6 +180,11 @@ export GLOG_alsologtostderr=1
 ```
 
 ### Launch the component
+如何加载一个component:
+cyber_launch start cyber/examples/common_component_example/common.launch
+or
+mainboard -d cyber/examples/common_component_example/common.dag
+
 
 You can choose either of the two ways to launch the newly built component:
 

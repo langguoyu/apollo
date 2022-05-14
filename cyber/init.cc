@@ -99,13 +99,19 @@ bool Init(const char* binary_name) {
     return false;
   }
 
+  //TODO: 需要分析初始化log
   InitLogger(binary_name);
   auto thread = const_cast<std::thread*>(async_logger->LogThread());
   scheduler::Instance()->SetInnerThreadAttr("async_log", thread);
+
+  //TODO:需要分析 初始化系统监控
   SysMo::Instance();
+
+  //设置ctrl+c signal
   std::signal(SIGINT, OnShutdown);
   // Register exit handlers
   if (!g_atexit_registered) {
+    //设置exit时做的工作,程序退出时会执行ExitHandle
     if (std::atexit(ExitHandle) != 0) {
       AERROR << "Register exit handle failed";
       return false;
@@ -115,6 +121,7 @@ bool Init(const char* binary_name) {
   }
   SetState(STATE_INITIALIZED);
 
+  //TODO:mock模式下的时钟，mock模式做什么用
   auto global_data = GlobalData::Instance();
   if (global_data->IsMockTimeMode()) {
     auto node_name = kClockNode + std::to_string(getpid());

@@ -15,6 +15,7 @@
  *****************************************************************************/
 #include "cyber/examples/common_component_example/common_component_example.h"
 
+//TODO:需要进一步分析Init Proc如何调用的
 bool CommonComponentSample::Init() {
   AINFO << "Commontest component init";
   return true;

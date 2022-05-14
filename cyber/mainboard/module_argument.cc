@@ -42,6 +42,7 @@ void ModuleArgument::DisplayUsage() {
 
 void ModuleArgument::ParseArgument(const int argc, char* const argv[]) {
   binary_name_ = std::string(basename(argv[0]));
+  //解析-d参数到dag_conf_list_ -p参数到process_group_ -s参数到sched_name_
   GetOptions(argc, argv);
 
   if (process_group_.empty()) {
@@ -51,7 +52,8 @@ void ModuleArgument::ParseArgument(const int argc, char* const argv[]) {
   if (sched_name_.empty()) {
     sched_name_ = DEFAULT_sched_name_;
   }
-
+  
+  //设置process_group_ sched_name_
   GlobalData::Instance()->SetProcessGroup(process_group_);
   GlobalData::Instance()->SetSchedName(sched_name_);
   AINFO << "binary_name_ is " << binary_name_ << ", process_group_ is "
@@ -64,6 +66,7 @@ void ModuleArgument::ParseArgument(const int argc, char* const argv[]) {
 void ModuleArgument::GetOptions(const int argc, char* const argv[]) {
   opterr = 0;  // extern int opterr
   int long_index = 0;
+  //解析-d参数到dag_conf_list_ -p参数到process_group_ -s参数到sched_name_
   const std::string short_opts = "hd:p:s:";
   static const struct option long_opts[] = {
       {"help", no_argument, nullptr, 'h'},

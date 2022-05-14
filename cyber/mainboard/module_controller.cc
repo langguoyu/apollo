@@ -39,6 +39,7 @@ bool ModuleController::LoadAll() {
   const std::string current_path = common::GetCurrentPath();
   const std::string dag_root_path = common::GetAbsolutePath(work_root, "dag");
   std::vector<std::string> paths;
+  //每个dag文件，放入paths，并统计component_nums
   for (auto& dag_conf : args_.GetDAGConfList()) {
     std::string module_path = "";
     if (dag_conf == common::GetFileName(dag_conf)) {
@@ -57,12 +58,14 @@ bool ModuleController::LoadAll() {
     total_component_nums += GetComponentNum(module_path);
     paths.emplace_back(std::move(module_path));
   }
+  //TODO: 为什么has_timer_component=true时加上TaskPoolSize
   if (has_timer_component) {
     total_component_nums += scheduler::Instance()->TaskPoolSize();
   }
   common::GlobalData::Instance()->SetComponentNums(total_component_nums);
   for (auto module_path : paths) {
     AINFO << "Start initialize dag: " << module_path;
+    //加载每个module
     if (!LoadModule(module_path)) {
       AERROR << "Failed to load module: " << module_path;
       return false;
@@ -75,6 +78,7 @@ bool ModuleController::LoadModule(const DagConfig& dag_config) {
   const std::string work_root = common::WorkRoot();
 
   for (auto module_config : dag_config.module_config()) {
+    //解析dag/module_config/module_library
     std::string load_path;
     if (module_config.module_library().front() == '/') {
       load_path = module_config.module_library();
@@ -88,12 +92,15 @@ bool ModuleController::LoadModule(const DagConfig& dag_config) {
       return false;
     }
 
+    //TODO: 需要分析加载dag/module_config/module_library
     class_loader_manager_.LoadLibrary(load_path);
 
     for (auto& component : module_config.components()) {
       const std::string& class_name = component.class_name();
+      //TODO: 需要分析加载dag/module_config/components/class_name的过程
       std::shared_ptr<ComponentBase> base =
           class_loader_manager_.CreateClassObj<ComponentBase>(class_name);
+      //调用ComponentBase Initialize
       if (base == nullptr || !base->Initialize(component.config())) {
         return false;
       }

@@ -27,12 +27,15 @@ using apollo::cyber::mainboard::ModuleController;
 int main(int argc, char** argv) {
   // parse the argument
   ModuleArgument module_args;
+  //解析参数
   module_args.ParseArgument(argc, argv);
 
   // initialize cyber
+  //初始化cyber
   apollo::cyber::Init(argv[0]);
 
   // start module
+  //启动module
   ModuleController controller(module_args);
   if (!controller.Init()) {
     controller.Clear();
@@ -40,6 +43,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
+  //等待shutdown
   apollo::cyber::WaitForShutdown();
   controller.Clear();
   AINFO << "exit mainboard.";
