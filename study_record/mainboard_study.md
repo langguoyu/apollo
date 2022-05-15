@@ -366,6 +366,6 @@ I0514 10:50:34.207207 148465 mainboard.cc:45] exit mainboard.
     分析 初始化系统监控
     mock模式下的时钟，mock模式做什么用
     为什么has_timer_component=true时加上TaskPoolSize
-    分析加载dag/module_config/module_library
-    分析加载dag/module_config/components/class_name的过程
+    分析加载dag/module_config/module_library:class_loader_manager_.LoadLibrary(load_path);
+    分析加载dag/module_config/components/class_name的过程:std::shared_ptr<ComponentBase> base = class_loader_manager_.CreateClassObj<ComponentBase> (class_name);
     TODO需要进一步分析Init Proc如何调用的

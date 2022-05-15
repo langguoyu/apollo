@@ -92,12 +92,12 @@ bool ModuleController::LoadModule(const DagConfig& dag_config) {
       return false;
     }
 
-    //TODO: 需要分析加载dag/module_config/module_library
+    //加载dag/module_config/module_library
     class_loader_manager_.LoadLibrary(load_path);
 
     for (auto& component : module_config.components()) {
       const std::string& class_name = component.class_name();
-      //TODO: 需要分析加载dag/module_config/components/class_name的过程
+      //加载dag/module_config/components/class_name的过程
       std::shared_ptr<ComponentBase> base =
           class_loader_manager_.CreateClassObj<ComponentBase>(class_name);
       //调用ComponentBase Initialize

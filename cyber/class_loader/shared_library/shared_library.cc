@@ -49,6 +49,7 @@ void SharedLibrary::Load(const std::string& path, int flags) {
   } else {
     real_flag |= RTLD_GLOBAL;
   }
+  //调用系统接口dlopen打开library
   handle_ = dlopen(path.c_str(), real_flag);
   if (!handle_) {
     const char* err = dlerror();
@@ -61,6 +62,7 @@ void SharedLibrary::Load(const std::string& path, int flags) {
 void SharedLibrary::Unload() {
   std::lock_guard<std::mutex> lock(mutex_);
   if (handle_) {
+    //调用系统接口dlclose关闭library
     dlclose(handle_);
     handle_ = nullptr;
   }
@@ -79,6 +81,7 @@ void* SharedLibrary::GetSymbol(const std::string& name) {
   std::lock_guard<std::mutex> lock(mutex_);
   if (!handle_) return nullptr;
 
+  //调用dlsym查看是否有响应的符号
   void* result = dlsym(handle_, name.c_str());
   if (!result) {
     throw SymbolNotFoundException(name);
