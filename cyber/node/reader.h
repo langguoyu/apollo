@@ -273,6 +273,7 @@ bool Reader<MessageT>::Init() {
   auto dv = std::make_shared<data::DataVisitor<MessageT>>(
       role_attr_.channel_id(), pending_queue_size_);
   // Using factory to wrap templates.
+  //TODO: 进一步分析Routine相关
   croutine::RoutineFactory factory =
       croutine::CreateRoutineFactory<MessageT>(std::move(func), dv);
   if (!sched->CreateTask(factory, croutine_name_)) {
